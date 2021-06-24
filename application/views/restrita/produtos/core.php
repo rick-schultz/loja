@@ -7,7 +7,7 @@
     <div class="section-body">
       <div class="row">
         <div class="col-12">
-          <div class="card">
+          <div class="card p-3">
             <div class="card-header">
               <h4><?php echo $titulo; ?></h4>
             </div>
@@ -37,7 +37,7 @@
 
                 <div class="form-group col-md-2">
                   <label>Código do Produto</label>
-                  <input type="text" name="produto_codigo" class="form-control border-0" value="<?php echo (isset($produto) ? $produto[0]->produto_codigo : set_value('produto_codigo')); ?>" readonly>
+                  <input type="text" name="produto_codigo" class="form-control border-0" value="<?php echo (isset($produto) ? $produto[0]->produto_codigo : $codigo_gerado); ?>" readonly>
                   <?php echo form_error('produto_codigo', '<div class="text-danger">', '</div>') ?>
                 </div>
 

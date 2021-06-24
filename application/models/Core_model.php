@@ -15,6 +15,7 @@ class Core_model extends CI_Model
    return false;
   }
  }
+
  public function get_by_id($tabela = NULL, $condicoes = NULL)
  {
   if ($tabela && $this->db->table_exists($tabela) && is_array($condicoes)) {
@@ -25,6 +26,7 @@ class Core_model extends CI_Model
    return false;
   }
  }
+
  public function insert($tabela = NULL, $data = NULL, $get_last_id = NULL)
  {
   if ($tabela && $this->db->table_exists($tabela) && is_array($data)) {
@@ -44,6 +46,7 @@ class Core_model extends CI_Model
    return false;
   }
  }
+
  public function update($tabela = NULL, $data = NULL, $condicoes = NULL)
  {
   if ($tabela && $this->db->table_exists($tabela) && is_array($data) && is_array($condicoes)) {
@@ -56,6 +59,7 @@ class Core_model extends CI_Model
    return false;
   }
  }
+
  public function delete($tabela = NULL, $condicoes = NULL)
  {
   if ($tabela && $this->db->table_exists($tabela) && is_array($condicoes)) {
@@ -67,5 +71,15 @@ class Core_model extends CI_Model
   } else {
    return false;
   }
+ }
+
+ public function generate_unique_code($tabela = NULL, $tipo_codigo = NULL, $tamanho_codigo = NULL, $campo_procura = NULL)
+ {
+  do {
+   $codigo = random_string($tipo_codigo, $tamanho_codigo);
+   $this->db->where($campo_procura, $codigo);
+   $this->db->from($tabela);
+  } while ($this->db->count_all_results() >= 1);
+  return $codigo;
  }
 }
