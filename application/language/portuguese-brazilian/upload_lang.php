@@ -1,4 +1,5 @@
 <?php
+
 /**
  * System messages translation for CodeIgniter(tm)
  *
@@ -7,7 +8,7 @@
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 $lang['upload_userfile_not_set'] = 'Não foi possível encontrar a variável post chamada userfile.';
 $lang['upload_file_exceeds_limit'] = 'O arquivo excedeu o tamanho máximo permitido de upload em seu arquivo de configuração do PHP.';
@@ -18,7 +19,7 @@ $lang['upload_unable_to_write_file'] = 'O arquivo não pode ser escrito no disco
 $lang['upload_stopped_by_extension'] = 'O upload de arquivo foi parado por causa de sua extensão.';
 $lang['upload_no_file_selected'] = 'Você não selecionou o arquivo para fazer upload.';
 $lang['upload_invalid_filetype'] = 'O tipo de arquivo que você está tentando fazer upload não é permitido.';
-$lang['upload_invalid_filesize'] = 'O arquivo que você está tentando fazer upload é maior que o tamanho permitido.';
+$lang['upload_invalid_filesize'] = 'Por Favor, selecione imagens com o tamanho de até 1000px x 1000px.';
 $lang['upload_invalid_dimensions'] = 'A imagem que você está tentando fazer upload excede as dimensões máximas permitidas.';
 $lang['upload_destination_error'] = 'Um problema foi encontrado enquanto tentava mover o arquivo que foi feito upload para o destino final.';
 $lang['upload_no_filepath'] = 'O caminho(path) para upload parece não ser válido.';

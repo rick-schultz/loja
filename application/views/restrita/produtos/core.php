@@ -50,7 +50,7 @@
                 <div class="form-group col-md-2">
                   <label>Categoria</label>
                   <select class="form-control" name="produto_categoria_id">
-                    <option>Escolha...</option>
+                    <option value="">Escolha...</option>
                     <?php foreach ($categorias as $categoria) : ?>
                       <?php if (isset($produto)) : ?>
                         <option value="<?php echo $categoria->categoria_id; ?>" <?php echo ($categoria->categoria_id == $produto[0]->produto_categoria_id ? 'selected' : ''); ?>><?php echo $categoria->categoria_nome; ?></option>
@@ -59,12 +59,13 @@
                       <?php endif; ?>
                     <?php endforeach; ?>
                   </select>
+                  <?php echo form_error('produto_categoria_id', '<div class="text-danger">', '</div>') ?>
                 </div>
 
                 <div class="form-group col-md-2">
                   <label>Marcas</label>
                   <select class="form-control" name="produto_marca_id">
-                    <option>Escolha...</option>
+                    <option value="">Escolha...</option>
                     <?php foreach ($marcas as $marca) : ?>
                       <?php if (isset($produto)) : ?>
                         <option value="<?php echo $marca->marca_id; ?>" <?php echo ($marca->marca_id == $produto[0]->produto_categoria_id ? 'selected' : ''); ?>><?php echo $marca->marca_nome; ?></option>
@@ -73,6 +74,7 @@
                       <?php endif; ?>
                     <?php endforeach; ?>
                   </select>
+                  <?php echo form_error('produto_marca_id', '<div class="text-danger">', '</div>') ?>
                 </div>
               </div>
 
@@ -187,7 +189,7 @@
                         <ul style="list-style: none; display: inline-block">
                           <li>
                             <img src="<?php echo base_url('uploads/produtos/' . $foto->foto_caminho); ?>" width="80" class="img-thumbnail mr-1 mb-2">
-                            <input type="text" name="fotos_produtos[]" value="<?php echo $foto->foto_caminho; ?>">
+                            <input type="hidden" name="fotos_produtos[]" value="<?php echo $foto->foto_caminho; ?>">
                             <a href="javascript:(void)" class="btn btn-danger d-block btn-icon mx-auto mb-30 btn-remove"><i class="fas fa-times"></i></a>
                           </li>
                         </ul>

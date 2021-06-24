@@ -39,7 +39,6 @@ class Produtos extends CI_Controller
 
  public function core($produto_id = NULL)
  {
-
   $produto_id = (int) $produto_id;
   if (!$produto_id) {
    //Cadastrando
@@ -49,31 +48,105 @@ class Produtos extends CI_Controller
     redirect('restrita/produtos');
    } else {
     //Editando
-    $data = array(
-     'titulo' => 'Editar Produto',
-     'styles' => array(
-      'jquery-upload-file/css/uploadfile.css',
-     ),
-     'scripts' => array(
-      'sweetalert2/sweetalert2.all.min.js',
-      'jquery-upload-file/js/jquery.uploadfile.min.js',
-      'jquery-upload-file/js/produtos.js',
-      'mask/jquery.mask.min.js',
-      'mask/custom.js',
-     ),
-     'produto' => $produto,
-     'fotos_produto' => $this->core_model->get_all('produtos_fotos', array('foto_produto_id' => $produto_id)),
-     'categorias' => $this->core_model->get_all('categorias', array('categoria_ativa' => 1)),
-     'marcas' => $this->core_model->get_all('marcas', array('marca_ativa' => 1)),
-    );
 
-    /*     echo '<pre>';
-    print_r($data['produto']);
-    exit(); */
+    $this->form_validation->set_rules('produto_nome', 'Nome do Produto', 'trim|required|min_length[2]|max_length[40]|callback_valida_nome_produto');
+    $this->form_validation->set_rules('produto_categoria_id', 'Categoria do Produto', 'trim|required');
+    $this->form_validation->set_rules('produto_marca_id', 'Marca do Produto', 'trim|required');
+    $this->form_validation->set_rules('produto_valor', 'Valor de Venda do Produto', 'trim|required');
+    $this->form_validation->set_rules('produto_peso', 'Peso do Produto', 'trim|required|integer');
+    $this->form_validation->set_rules('produto_altura', 'Altura do Produto', 'trim|required|integer');
+    $this->form_validation->set_rules('produto_largura', 'Largura do Produto', 'trim|required|integer');
+    $this->form_validation->set_rules('produto_comprimento', 'Comprimento do Produto', 'trim|required|integer');
+    $this->form_validation->set_rules('produto_quantidade_estoque', 'Quantidade em estoque', 'trim|required|integer');
+    $this->form_validation->set_rules('produto_descricao', 'Descrição do Produto', 'trim|required|min_length[10]|max_length[5000]');
 
-    $this->load->view('restrita/layout/header', $data);
-    $this->load->view('restrita/produtos/core');
-    $this->load->view('restrita/layout/footer');
+    if ($this->form_validation->run()) {
+
+     $data = elements(
+      array(
+       'produto_nome',
+       'produto_categoria_id',
+       'produto_marca_id',
+       'produto_valor',
+       'produto_peso',
+       'produto_altura',
+       'produto_largura',
+       'produto_comprimento',
+       'produto_quantidade_estoque',
+       'produto_ativo',
+       'produto_destaque',
+       'produto_controlar_estoque',
+       'produto_descricao',
+      ),
+      $this->input->post()
+     );
+     //Remove a vírgula do valor
+     $data['produto_valor'] = str_replace(',', '', $data['produto_valor']);
+
+     //Criando o metalink do produto
+     $data['produto_meta_link'] = url_amigavel($data['produto_nome']);
+     $data = html_escape($data);
+     $this->core_model->update('produtos', $data, array('produto_id' => $produto_id));
+
+     //Recuperar do post se veio fotos
+     $fotos_produtos = $this->input->post('fotos_produtos');
+     $total_fotos = count($fotos_produtos);
+     for ($i = 0; $i < $total_fotos; $i++) {
+      $data = array(
+       'foto_produto_id' => $produto_id,
+       'foto_caminho' => $fotos_produtos[$i],
+      );
+      $this->core_model->insert('produtos_fotos', $data);
+     }
+
+     redirect('restrita/produtos');
+    } else {
+     //Erro de Validação
+
+     $data = array(
+      'titulo' => 'Editar Produto',
+      'styles' => array(
+       'jquery-upload-file/css/uploadfile.css',
+      ),
+      'scripts' => array(
+       'sweetalert2/sweetalert2.all.min.js',
+       'jquery-upload-file/js/jquery.uploadfile.min.js',
+       'jquery-upload-file/js/produtos.js',
+       'mask/jquery.mask.min.js',
+       'mask/custom.js',
+      ),
+      'produto' => $produto,
+      'fotos_produto' => $this->core_model->get_all('produtos_fotos', array('foto_produto_id' => $produto_id)),
+      'categorias' => $this->core_model->get_all('categorias', array('categoria_ativa' => 1)),
+      'marcas' => $this->core_model->get_all('marcas', array('marca_ativa' => 1)),
+     );
+
+     $this->load->view('restrita/layout/header', $data);
+     $this->load->view('restrita/produtos/core');
+     $this->load->view('restrita/layout/footer');
+    }
+   }
+  }
+ }
+
+ public function valida_nome_produto($produto_nome)
+ {
+  $produto_id = (int) $this->input->post('produto_id');
+  if (!$produto_id) {
+   //cadastrando
+   if ($this->core_model->get_by_id('produtos', array('produto_nome' => $produto_nome))) {
+    $this->form_validation->set_message('valida_nome_produto', 'Esse produto já existe.');
+    return false;
+   } else {
+    return true;
+   }
+  } else {
+   //editando
+   if ($this->core_model->get_by_id('produtos', array('produto_nome' => $produto_nome, 'produto_id !=' => $produto_id))) {
+    $this->form_validation->set_message('valida_nome_produto', 'Esse produto já existe.');
+    return false;
+   } else {
+    return true;
    }
   }
  }
