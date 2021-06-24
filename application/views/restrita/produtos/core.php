@@ -48,8 +48,8 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                  <label for="inputState">Categoria</label>
-                  <select id="inputState" class="form-control" name="produto_categoria_id">
+                  <label>Categoria</label>
+                  <select class="form-control" name="produto_categoria_id">
                     <option>Escolha...</option>
                     <?php foreach ($categorias as $categoria) : ?>
                       <?php if (isset($produto)) : ?>
@@ -62,8 +62,8 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                  <label for="inputState">Marcas</label>
-                  <select id="inputState" class="form-control" name="produto_marca_id">
+                  <label>Marcas</label>
+                  <select class="form-control" name="produto_marca_id">
                     <option>Escolha...</option>
                     <?php foreach ($marcas as $marca) : ?>
                       <?php if (isset($produto)) : ?>
@@ -119,8 +119,8 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                  <label for="inputState">Ativo</label>
-                  <select id="inputState" class="form-control" name="produto_ativo">
+                  <label>Ativo</label>
+                  <select class="form-control" name="produto_ativo">
                     <?php if (isset($produto)) : ?>
                       <option value="1" <?php echo ($produto[0]->produto_ativo == 1 ? 'selected' : ''); ?>>Sim</option>
                       <option value="0" <?php echo ($produto[0]->produto_ativo == 0 ? 'selected' : ''); ?>>Não</option>
@@ -132,8 +132,8 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                  <label for="inputState">Produto em Destaque</label>
-                  <select id="inputState" class="form-control" name="produto_destaque">
+                  <label>Produto em Destaque</label>
+                  <select class="form-control" name="produto_destaque">
                     <?php if (isset($produto)) : ?>
                       <option value="1" <?php echo ($produto[0]->produto_destaque == 1 ? 'selected' : ''); ?>>Sim</option>
                       <option value="0" <?php echo ($produto[0]->produto_destaque == 0 ? 'selected' : ''); ?>>Não</option>
@@ -145,8 +145,8 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                  <label for="inputState">Controla Estoque</label>
-                  <select id="inputState" class="form-control" name="produto_controlar_estoque">
+                  <label>Controla Estoque</label>
+                  <select class="form-control" name="produto_controlar_estoque">
                     <?php if (isset($produto)) : ?>
                       <option value="1" <?php echo ($produto[0]->produto_controlar_estoque == 1 ? 'selected' : ''); ?>>Sim</option>
                       <option value="0" <?php echo ($produto[0]->produto_controlar_estoque == 0 ? 'selected' : ''); ?>>Não</option>
@@ -180,10 +180,32 @@
               </div>
 
               <div class="form-row">
+                <div class="col-md-12">
+                  <?php if (isset($produto)) : ?>
+                    <div id="uploaded_image" class="text-danger">
+                      <?php foreach ($fotos_produto as $foto) : ?>
+                        <ul style="list-style: none; display: inline-block">
+                          <li>
+                            <img src="<?php echo base_url('uploads/produtos/' . $foto->foto_caminho); ?>" width="80" class="img-thumbnail mr-1 mb-2">
+                            <input type="text" name="fotos_produtos[]" value="<?php echo $foto->foto_caminho; ?>">
+                            <a href="javascript:(void)" class="btn btn-danger d-block btn-icon mx-auto mb-30 btn-remove"><i class="fas fa-times"></i></a>
+                          </li>
+                        </ul>
+                      <?php endforeach; ?>
+                    </div>
+                  <?php else : ?>
+                    <div id="uploaded_image" class="text-danger">
+                    </div>
+                  <?php endif; ?>
+                </div>
+              </div>
+
+              <div class="form-row">
                 <?php if (isset($produto)) : ?>
                   <input type="hidden" name="produto_id" value="<?php echo $produto[0]->produto_id; ?>">
                 <?php endif; ?>
               </div>
+
               </div>
               <div class="card-footer">
                 <button class="btn btn-primary mr-2">Salvar</button>

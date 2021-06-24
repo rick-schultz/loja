@@ -55,9 +55,9 @@ class Produtos extends CI_Controller
       'jquery-upload-file/css/uploadfile.css',
      ),
      'scripts' => array(
+      'sweetalert2/sweetalert2.all.min.js',
       'jquery-upload-file/js/jquery.uploadfile.min.js',
       'jquery-upload-file/js/produtos.js',
-      'jquery-upload-file/js/jquery.produtos.js',
       'mask/jquery.mask.min.js',
       'mask/custom.js',
      ),
