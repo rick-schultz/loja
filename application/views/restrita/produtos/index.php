@@ -61,7 +61,7 @@
             <td><?php echo $produto->produto_nome; ?></td>
             <td><?php echo $produto->marca_nome; ?></td>
             <td><?php echo $produto->categoria_nome; ?></td>
-            <td><?php echo number_format($produto->produto_valor, 2); ?></td>
+            <td><?php echo 'R$&nbsp;' . number_format($produto->produto_valor, 2); ?></td>
             <td><?php echo ($produto->produto_ativo == 1 ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>'); ?></td>
             <td>
              <a href="<?php echo base_url('restrita/produtos/core/' . $produto->produto_id); ?>" class="btn btn-icon btn-primary mr-2"><i class="far fa-edit"></i></a>

@@ -42,7 +42,7 @@ class Produtos extends CI_Controller
   $produto_id = (int) $produto_id;
   if (!$produto_id) {
    //Cadastrando
-   $this->form_validation->set_rules('produto_nome', 'Nome do Produto', 'trim|required|min_length[2]|max_length[40]|callback_valida_nome_produto');
+   $this->form_validation->set_rules('produto_nome', 'Nome do Produto', 'trim|required|min_length[2]|max_length[240]|callback_valida_nome_produto');
    $this->form_validation->set_rules('produto_categoria_id', 'Categoria do Produto', 'trim|required');
    $this->form_validation->set_rules('produto_marca_id', 'Marca do Produto', 'trim|required');
    $this->form_validation->set_rules('produto_valor', 'Valor de Venda do Produto', 'trim|required');
@@ -53,11 +53,12 @@ class Produtos extends CI_Controller
    $this->form_validation->set_rules('produto_quantidade_estoque', 'Quantidade em estoque', 'trim|required|integer');
    $this->form_validation->set_rules('produto_descricao', 'Descrição do Produto', 'trim|required|min_length[10]|max_length[5000]');
 
-   if ($this->form_validation->run()) {
+   $fotos_produtos = $this->input->post('fotos_produtos');
+   if (!$fotos_produtos) {
+    $this->form_validation->set_rules('fotos_produtos', 'Imagens do Produto', 'required');
+   }
 
-    echo '<pre>';
-    print_r($this->input->post());
-    exit();
+   if ($this->form_validation->run()) {
 
     $data = elements(
      array(
@@ -84,11 +85,13 @@ class Produtos extends CI_Controller
     $data['produto_meta_link'] = url_amigavel($data['produto_nome']);
     $data = html_escape($data);
 
-    //Atualiza o produto
-    $this->core_model->update('produtos', $data, array('produto_id' => $produto_id));
+    //código gerado
+    $data['produto_codigo'] = $this->input->post('produto_codigo');
 
-    //Exclui as imagens antigas do produto
-    $this->core_model->delete('produtos_fotos', array('foto_produto_id' => $produto_id));
+    //Insere o produto
+    $this->core_model->insert('produtos', $data, TRUE);
+    //Recupera o último ID inserido
+    $produto_id = $this->session->userdata('last_id');
 
     //Recuperar do post se veio fotos
     $fotos_produtos = $this->input->post('fotos_produtos');
@@ -135,7 +138,7 @@ class Produtos extends CI_Controller
    } else {
     //Editando
 
-    $this->form_validation->set_rules('produto_nome', 'Nome do Produto', 'trim|required|min_length[2]|max_length[40]|callback_valida_nome_produto');
+    $this->form_validation->set_rules('produto_nome', 'Nome do Produto', 'trim|required|min_length[2]|max_length[240]|callback_valida_nome_produto');
     $this->form_validation->set_rules('produto_categoria_id', 'Categoria do Produto', 'trim|required');
     $this->form_validation->set_rules('produto_marca_id', 'Marca do Produto', 'trim|required');
     $this->form_validation->set_rules('produto_valor', 'Valor de Venda do Produto', 'trim|required');
@@ -267,7 +270,7 @@ class Produtos extends CI_Controller
    //Resize image configuration
    $config['image_library'] = 'gd2';
    $config['source_image'] = './uploads/produtos/' . $this->upload->data('file_name');
-   $config['new_image'] = './uploads/produtos/small' . $this->upload->data('file_name');
+   $config['new_image'] = './uploads/produtos/small/' . $this->upload->data('file_name');
    $config['width'] = '300';
    $config['height'] = '300';
    //Chama a biblioteca
