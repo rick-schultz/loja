@@ -289,4 +289,34 @@ class Produtos extends CI_Controller
   }
   echo json_encode($data);
  }
+
+ public function delete($produto_id = NULL)
+ {
+  $produto_id = (int) $produto_id;
+  if (!$produto_id || !$this->core_model->get_by_id('produtos', array('produto_id' => $produto_id))) {
+   $this->session->set_flashdata('erro', 'Esse produto não foi encontrado');
+   redirect('restrita/produtos');
+  }
+  if ($this->core_model->get_by_id('produtos', array('produto_id' => $produto_id, 'produto_ativo' => 1))) {
+   $this->session->set_flashdata('erro', 'Não é permitido excluir um produto ativo');
+   redirect('restrita/produtos');
+  }
+  //recupera as fotos do produto antes da exclusão
+  $fotos_produto = $this->core_model->get_all('produtos_fotos', array('foto_produto_id' => $produto_id));
+  //elimina as fotos do produto
+  if ($fotos_produto) {
+   foreach ($fotos_produto as $foto) {
+    $foto_grande = FCPATH . 'uploads/produtos/' . $foto->foto_caminho;
+    $foto_pequena = FCPATH . 'uploads/produtos/small/' . $foto->foto_caminho;
+    //Exclui as imagens
+    if (file_exists($foto_grande) && file_exists($foto_pequena)) {
+     unlink($foto_grande);
+     unlink($foto_pequena);
+    }
+   }
+   //exclui o produto
+   $this->core_model->delete('produtos', array('produto_id' => $produto_id));
+   redirect('restrita/produtos');
+  }
+ }
 }
